@@ -38,6 +38,7 @@ namespace Library
             //Dependences Injected senden ne isterlerse ne vereceksindeki olay
             services.AddSingleton(Configuration);
             services.AddScoped<ILibraryAsset, LibraryAssetService>();
+            services.AddScoped<ICheckout, CheckoutService>();
 
         }
 

@@ -14,14 +14,16 @@ namespace Library.Models.Catalog
         public string Type { get; set; }
         public int Year { get; set; }
         public string ISBN { get; set; }
-        public string DeweyCallNumber { get; set; }
+        public string Dewey { get; set; }
         public string Status { get; set; }
         public decimal Cost { get; set; }
         public string CurrentLocation { get; set; }
         public string ImageUrl { get; set; }
-        public Checkout PatronName { get; set; }
+        public string PatronName { get; set; }
+        public Checkout LatestCheckout { get; set; }
+        public LibraryCard CurrentAssociatedLibraryCard { get; set; }
         public IEnumerable<CheckoutHistory> CheckoutHistory { get; set; }
-        public IEnumerable<AssetHoldModel> AssetHolds { get; set; }
+        public IEnumerable<AssetHoldModel> CurrentHolds { get; set; }
     }
 
     public class AssetHoldModel

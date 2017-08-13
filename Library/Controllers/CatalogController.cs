@@ -9,9 +9,11 @@ namespace Library.Controllers
     {
         #region DependenceInjection
         private ILibraryAsset _asset;
-        public CatalogController(ILibraryAsset asset)
+        private ICheckout _checkout;
+        public CatalogController(ILibraryAsset asset, ICheckout checkout)
         {
             this._asset = asset;
+            this._checkout = checkout;
         } 
         #endregion
 
@@ -43,23 +45,35 @@ namespace Library.Controllers
         public IActionResult Detail(int id)
         {
             var asset = _asset.GetById(id);
-
+            var currentHolds = _checkout.GetCurrentHolds(id)
+                .Select(x => new AssetHoldModel {
+                    HoldPlaced = _checkout.GetCurrentHoldPlaced(x.Id),
+                    PatronName = _checkout.GetCurrentHoldPatronName(x.Id)
+                });
             var model = new AssetDetailModel
             {
                 AssetId = id,
                 Title = asset.Title,
+                Type = _asset.GetType(id),
                 Year = asset.Year,
                 Cost = asset.Cost,
                 Status = asset.Status.Name,
-                ImageUrl =asset.ImageUrl,
-                AuthorOrDirector = _asset.GetAuthorOrdirectory(id),
+                ImageUrl = asset.ImageUrl,
                 CurrentLocation = _asset.GetCurrentLocation(id).Name,
-                DeweyCallNumber = _asset.GetDeweyIndex(id),
-                ISBN = _asset.GetISBN(id)
+                Dewey = _asset.GetDeweyIndex(id),
+                AuthorOrDirector = _asset.GetAuthorOrdirectory(id),
+                CheckoutHistory = _checkout.GetCheckoutHistory(id),
+                ISBN = _asset.GetISBN(id),
+                LatestCheckout =  _checkout.GetLatestCheckout(id),
+                PatronName  = _checkout.GetCurrentCheckoutPatron(id),
+                CurrentHolds = currentHolds
+
             };
 
             return View(model);
         }
+
+
 
     }
 }
